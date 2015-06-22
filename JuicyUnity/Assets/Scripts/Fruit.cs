@@ -5,7 +5,7 @@ public class Fruit : MonoBehaviour {
 
     public Dot dot;
     public float hideTime = 0.75f;
-    public int addScore = 1;
+    public int addCoins = 1;
 
     [HideInInspector]
     public bool hiding;
@@ -14,7 +14,7 @@ public class Fruit : MonoBehaviour {
     {
         if (coll.tag.Equals("Player"))
         {
-            Game.Instance.IncScore(addScore);
+            Game.Instance.IncCoins(addCoins);
             Hide();
         }
     }

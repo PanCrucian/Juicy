@@ -6,6 +6,7 @@ public class Game : MonoBehaviour {
     [System.Serializable]
     public class CustomData
     {
+        public Text coins;
         public Text score;
         public Text timer;
         public Button replay;
@@ -19,6 +20,7 @@ public class Game : MonoBehaviour {
     public GameStates state;
 
     public int score;
+    public int coins;
     public int timer = 3;
     private int timerCounter;
 
@@ -40,11 +42,14 @@ public class Game : MonoBehaviour {
     {
         timerCounter = timer;
         StartCoroutine(TimerNumerator());
+        if (PlayerPrefs.HasKey("Coins"))
+            coins = PlayerPrefs.GetInt("Coins");
     }
 
     void Update()
     {
         data.score.text = score.ToString();
+        data.coins.text = coins.ToString();
 
         data.timer.text = timerCounter.ToString();
         if (timerCounter == 0)
@@ -65,6 +70,17 @@ public class Game : MonoBehaviour {
     public void IncScore(int value)
     {
         score += value;
+    }
+
+    public void IncCoins()
+    {
+        coins++;
+        PlayerPrefs.SetInt("Coins", coins);
+    }
+    public void IncCoins(int value)
+    {
+        coins += value;
+        PlayerPrefs.SetInt("Coins", coins);
     }
 
     IEnumerator TimerNumerator()
