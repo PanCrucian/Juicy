@@ -3,13 +3,29 @@ using System.Collections;
 using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour {
+    public enum RotatingSides
+    {
+        Right,
+        Left
+    }
+    public enum InputTypes
+    {
+        LeftRight,
+        UpDown,
+        InvLeftRight,
+        InvUpDown,
+        DoubleTap
+    }
     [System.Serializable]
     public class CustomData
     {
         public GameObject graphics;
         public GameObject hook;
+        public float doubleTapTime = 0.25f;
     }
     public CustomData data;
+    public InputTypes inputType;
+    private RotatingSides rotatingSide;
     public enum HealthStates
     {
         Life,
@@ -26,6 +42,8 @@ public class Player : MonoBehaviour {
     private bool dragCalled;
     private bool allowHook;
     private BoxCollider boxCollider;
+    private float lastTapTime;
+    private int doubleTapCounter = 0;
 
     public static Player Instance
     {
@@ -79,6 +97,11 @@ public class Player : MonoBehaviour {
                                 transform.localRotation.eulerAngles.x,
                                 transform.localRotation.eulerAngles.y,
                                 rotateToAngle * -1f);
+        if (Mathf.Abs(rotateToAngle) > 360)
+            if (rotateToAngle > 0)
+                rotateToAngle = rotateToAngle - 360f;
+            else
+                rotateToAngle = 360 + rotateToAngle;
     }
 
     /// <summary>
@@ -89,15 +112,16 @@ public class Player : MonoBehaviour {
     {
         if (side)
         {
+            rotatingSide = RotatingSides.Right;
             if (rotateSpeed < 0)
                 rotateSpeed *= -1f;
         }
         else
         {
+            rotatingSide = RotatingSides.Left;
             if (rotateSpeed > 0)
                 rotateSpeed *= -1f; 
-        }
-            
+        }  
     }
 
     /// <summary>
@@ -109,16 +133,107 @@ public class Player : MonoBehaviour {
         PointerEventData data = (PointerEventData)bed;
         Vector2 press = data.pressPosition; 
         Vector2 current = data.position;
-        float difference = current.x - press.x;        
+        Vector2 difference = new Vector2() { 
+            x = current.x - press.x,
+            y = current.y - press.y
+        };        
         float dragTrashold = 10f;
-        if (Mathf.Abs(difference) < dragTrashold || dragCalled)
-            return;
-        
-        if (difference > 0)
-            ChangeRotation(true);
 
-        if (difference < 0)
-            ChangeRotation(false);
+        switch (inputType)
+        {
+            case InputTypes.LeftRight:
+                if (Mathf.Abs(difference.x) < dragTrashold || dragCalled)
+                    return;
+                if (difference.x > 0)
+                    ChangeRotation(true);
+                else
+                    ChangeRotation(false);
+                break;
+            case InputTypes.UpDown:
+                if (Mathf.Abs(difference.y) < dragTrashold || dragCalled)
+                    return;
+                if (difference.y > 0)
+                    ChangeRotation(true);
+                else
+                    ChangeRotation(false);
+                break;
+            case InputTypes.InvLeftRight:
+                if (Mathf.Abs(difference.x) < dragTrashold || dragCalled)
+                    return;
+                if (transform.localEulerAngles.z >= 90 && transform.localEulerAngles.z < 270)
+                {
+                    if (difference.x > 0)
+                    {
+                        if(this.data.graphics.transform.localPosition.y > 0)
+                            ChangeRotation(false);
+                        else
+                            ChangeRotation(true);
+                    }
+                    else
+                    {
+                        if (this.data.graphics.transform.localPosition.y > 0)
+                            ChangeRotation(true);
+                        else
+                            ChangeRotation(false);
+                    }
+                }
+                else
+                {
+                    if (difference.x > 0)
+                    {
+                        if (this.data.graphics.transform.localPosition.y > 0)
+                            ChangeRotation(true);
+                        else
+                            ChangeRotation(false);
+                    }
+                    else
+                    {
+                        if (this.data.graphics.transform.localPosition.y > 0)
+                            ChangeRotation(false);
+                        else
+                            ChangeRotation(true);
+                    }
+                }
+                break;
+            case InputTypes.InvUpDown:
+                if (Mathf.Abs(difference.y) < dragTrashold || dragCalled)
+                    return;
+                if (!(transform.localEulerAngles.z >= 0 && transform.localEulerAngles.z < 180))
+                {
+                    if (difference.y > 0)
+                    {
+                        if (this.data.graphics.transform.localPosition.y > 0)
+                            ChangeRotation(false);
+                        else
+                            ChangeRotation(true);
+                    }
+                    else
+                    {
+                        if (this.data.graphics.transform.localPosition.y > 0)
+                            ChangeRotation(true);
+                        else
+                            ChangeRotation(false);
+                    }
+                }
+                else
+                {
+                    if (difference.y > 0)
+                    {
+                        if (this.data.graphics.transform.localPosition.y > 0)
+                            ChangeRotation(true);
+                        else
+                            ChangeRotation(false);
+                    }
+                    else
+                    {
+                        if (this.data.graphics.transform.localPosition.y > 0)
+                            ChangeRotation(false);
+                        else
+                            ChangeRotation(true);
+                    }
+                }
+                break;
+        }
 
         dragCalled = true;
     }
@@ -139,6 +254,19 @@ public class Player : MonoBehaviour {
     public void PointerDown(BaseEventData bed)
     {
         ConnectToDotRequest();
+        doubleTapCounter++;
+        if (doubleTapCounter >= 2 && Mathf.Abs(Time.time - lastTapTime) <= data.doubleTapTime)
+        {
+            if (inputType == InputTypes.DoubleTap)
+            {
+                if (rotatingSide == RotatingSides.Left)
+                    ChangeRotation(true);
+                else
+                    ChangeRotation(false);
+            }
+            doubleTapCounter = 0;            
+        }
+        lastTapTime = Time.time;
     }
 
     /// <summary>

@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Fruit : MonoBehaviour {
+public class Fruit : MonoBehaviour, IMeasured
+{
 
     public Dot dot;
+    public bool allowHide = true;
     public float hideTime = 0.75f;
     public int addCoins = 1;
 
@@ -32,6 +34,8 @@ public class Fruit : MonoBehaviour {
     /// </summary>
     public void Hide()
     {
+        if (!allowHide)
+            return;
         hiding = true;
         GetComponent<Collider>().enabled = false;
         StartCoroutine(HideNumerator());

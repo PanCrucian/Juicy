@@ -9,7 +9,7 @@ public class RotatingFruit : Fruit {
     public override void Update()
     {
         base.Update();
-        if (Game.Instance.state != Game.GameStates.Game)
+        if (Game.Instance.state != Game.GameStates.Game || Player.Instance.healthState == Player.HealthStates.Death)
             return;
         if (!hiding)
         {

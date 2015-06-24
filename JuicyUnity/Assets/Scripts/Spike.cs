@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Spike : MonoBehaviour {
+public class Spike : MonoBehaviour, IMeasured
+{
 
     public Dot dot;
+    public bool allowHide = true;
     public float hideTime = 0.75f;
 
     [HideInInspector]
@@ -28,6 +30,8 @@ public class Spike : MonoBehaviour {
     /// </summary>
     public void Hide()
     {
+        if (!allowHide)
+            return;
         hiding = true;
         GetComponent<Collider>().enabled = false;
         StartCoroutine(HideNumerator());

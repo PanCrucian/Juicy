@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Dot : MonoBehaviour {
-
+public class Dot : MonoBehaviour, IMeasured {
+    public delegate void OnHidedDgt();
+    public OnHidedDgt OnHided;
     public float hideTime = 0.75f;
     public float heatTime = 5f;
     public GameObject graphics;
-    private bool hiding;
+    [HideInInspector]
+    public bool isHiding;
 
     public void StartHeat()
     {
@@ -18,7 +20,7 @@ public class Dot : MonoBehaviour {
         Material mat = graphics.GetComponent<MeshRenderer>().material;
         Color c = mat.color;
         for(float t = 0; t <= heatTime; t +=Time.deltaTime) {
-            if (hiding)
+            if (isHiding)
                 break;
             if (Game.Instance.state != Game.GameStates.Game)
                 t = 0f;
@@ -29,7 +31,7 @@ public class Dot : MonoBehaviour {
                 );
             yield return new WaitForEndOfFrame();
         }
-        if (!hiding)
+        if (!isHiding)
             Player.Instance.Die();
         Hide();
     }
@@ -39,7 +41,7 @@ public class Dot : MonoBehaviour {
     /// </summary>
     public void Hide()
     {
-        hiding = true;
+        isHiding = true;
         graphics.GetComponent<Collider>().enabled = false;
         StartCoroutine(HideNumerator());
     }
@@ -52,6 +54,8 @@ public class Dot : MonoBehaviour {
             transform.localScale = Vector3.Lerp(currentScale, Vector3.zero, t / hideTime);
             yield return new WaitForEndOfFrame();
         }
+        if (OnHided != null)
+            OnHided();
         gameObject.SetActive(false);
     }
 }

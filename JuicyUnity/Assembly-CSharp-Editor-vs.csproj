@@ -47,6 +47,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Editor\DotEditor.cs" />
+     <Compile Include="Assets\Editor\Drawing.cs" />
+     <Compile Include="Assets\Editor\FruitEditor.cs" />
+     <Compile Include="Assets\Editor\RotatingFruitEditor.cs" />
+     <Compile Include="Assets\Editor\RotatingSpikeEditor.cs" />
+     <Compile Include="Assets\Editor\SpikeEditor.cs" />
      <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
  <Reference Include="UnityEngine.UI">
