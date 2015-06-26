@@ -78,11 +78,43 @@ public class Player : MonoBehaviour {
             allowHook = false;
         if (allowHook)
         {
-            float distance = Vector3.Distance(triggeredDot.transform.position, data.hook.transform.position);
-            if (distance <= 0.1f)
+            float distance = Vector3.Distance(triggeredDot.transform.position, data.hook.transform.position);            
+            Vector3 dotSide = data.hook.transform.InverseTransformPoint(triggeredDot.transform.position);
+            float trashold = 0.1f;
+            if (data.hook.transform.localPosition.y < 0f)
+                dotSide.x *= -1f;
+            switch (rotatingSide)
             {
-                allowHook = false;
-                ConnectToDot();
+                case RotatingSides.Right:
+                    if (dotSide.x > 0f) //точка с правой стороны
+                    {
+                        if (distance <= trashold)
+                        {
+                            allowHook = false;
+                            ConnectToDot();
+                        }
+                    }
+                    else
+                    {
+                        allowHook = false;
+                        ConnectToDot();
+                    }
+                    break;
+                case RotatingSides.Left:
+                    if (dotSide.x < 0f) //точка с левой стороны
+                    {
+                        if (distance <= trashold)
+                        {
+                            allowHook = false;
+                            ConnectToDot();
+                        }
+                    }
+                    else
+                    {
+                        allowHook = false;
+                        ConnectToDot();
+                    }
+                    break;
             }
         }
     }
@@ -137,7 +169,7 @@ public class Player : MonoBehaviour {
             x = current.x - press.x,
             y = current.y - press.y
         };        
-        float dragTrashold = 10f;
+        float dragTrashold = 75f;
 
         switch (inputType)
         {
