@@ -5,18 +5,18 @@ public class RotatingSpike : Spike {
 
     public float rotateSpeed = 90f;
     public float selfRotateSpeed = 90f;
-
+    public bool hideOnDotEnd;
     LineRenderer lRenderer;
 
     void Start()
     {
         lRenderer = GetComponent<LineRenderer>();
         dot.OnHided += OnDotHided;
+        dot.OnStartHide += OnDotStartHided;
     }
 
     public override void Update()
-    {
-        base.Update();
+    {        
         if (Game.Instance.state != Game.GameStates.Game || Player.Instance.healthState == Player.HealthStates.Death)
             return;
         if (!hiding)
@@ -31,5 +31,10 @@ public class RotatingSpike : Spike {
     void OnDotHided()
     {
         lRenderer.enabled = false;
+    }
+
+    void OnDotStartHided()
+    {
+        Hide();
     }
 }

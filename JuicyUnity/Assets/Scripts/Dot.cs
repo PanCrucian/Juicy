@@ -4,6 +4,7 @@ using System.Collections;
 public class Dot : MonoBehaviour, IMeasured {
     public delegate void OnHidedDgt();
     public OnHidedDgt OnHided;
+    public OnHidedDgt OnStartHide;
     public float hideTime = 0.75f;
     public float heatTime = 5f;
     public GameObject graphics;
@@ -48,6 +49,8 @@ public class Dot : MonoBehaviour, IMeasured {
 
     IEnumerator HideNumerator()
     {
+        if (OnStartHide != null)
+            OnStartHide();
         Vector3 currentScale = transform.localScale;
         for (float t = 0; t <= hideTime; t += Time.deltaTime)
         {
