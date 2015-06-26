@@ -34,6 +34,7 @@ public class Player : MonoBehaviour {
     public HealthStates healthState;
 
     public float rotateSpeed;
+    public float magnetSpeed = 10f;
 
     public Dot currentDot;
     [HideInInspector]
@@ -44,6 +45,8 @@ public class Player : MonoBehaviour {
     private BoxCollider boxCollider;
     private float lastTapTime;
     private int doubleTapCounter = 0;
+    private Vector3 magnetPosition;
+    private Vector3 magnetVelo;
 
     public static Player Instance
     {
@@ -64,6 +67,7 @@ public class Player : MonoBehaviour {
         boxCollider = GetComponent<BoxCollider>();
         rotateToAngle = transform.eulerAngles.z * -1f;
         currentDot.StartHeat();
+        magnetPosition = currentDot.transform.position;
     }
 
     void Update()
@@ -72,13 +76,20 @@ public class Player : MonoBehaviour {
             return;
         if (healthState != HealthStates.Life)
             return;
-        Rotate();
 
+        Rotate();
+        CheckForHook();
+        magnetPosition = Vector3.SmoothDamp(transform.position, currentDot.transform.position, ref magnetVelo, magnetSpeed * Time.deltaTime);
+        transform.position = magnetPosition;
+    }
+
+    void CheckForHook()
+    {
         if (triggeredDot == null)
             allowHook = false;
         if (allowHook)
         {
-            float distance = Vector3.Distance(triggeredDot.transform.position, data.hook.transform.position);            
+            float distance = Vector3.Distance(triggeredDot.transform.position, data.hook.transform.position);
             Vector3 dotSide = data.hook.transform.InverseTransformPoint(triggeredDot.transform.position);
             float trashold = 0.1f;
             if (data.hook.transform.localPosition.y < 0f)
@@ -313,7 +324,7 @@ public class Player : MonoBehaviour {
     void ConnectToDot()
     {
         Game.Instance.IncScore();
-        transform.position = triggeredDot.transform.position;
+        transform.position = data.hook.transform.position;
         InvertChildrensTransform();
         boxCollider.center = new Vector3(
             boxCollider.center.x,
@@ -323,6 +334,7 @@ public class Player : MonoBehaviour {
         currentDot.Hide();
         currentDot = triggeredDot;
         currentDot.StartHeat();
+        magnetPosition = currentDot.transform.position;
     }
 
     /// <summary>
