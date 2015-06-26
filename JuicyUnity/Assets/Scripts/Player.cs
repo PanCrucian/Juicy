@@ -169,7 +169,7 @@ public class Player : MonoBehaviour {
             x = current.x - press.x,
             y = current.y - press.y
         };        
-        float dragTrashold = 75f;
+        float dragTrashold = 20f;
 
         switch (inputType)
         {
