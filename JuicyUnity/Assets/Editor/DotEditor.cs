@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-
+[CanEditMultipleObjects]
 [CustomEditor(typeof(Dot))]
 public class DotEditor : Editor {
     public bool fold;

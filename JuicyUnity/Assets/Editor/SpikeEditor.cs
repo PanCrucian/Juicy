@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-
+[CanEditMultipleObjects]
 [CustomEditor(typeof(Spike))]
 public class SpikeEditor : Editor
 {
