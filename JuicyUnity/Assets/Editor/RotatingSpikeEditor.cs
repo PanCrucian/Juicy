@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 
+[CanEditMultipleObjects]
 [CustomEditor(typeof(RotatingSpike))]
 public class RotatingSpikeEditor : Editor
 {
