@@ -5,3 +5,8 @@ JuicyUnity/JuicyUnity-csharp.sln
 JuicyUnity/Builds/Juicy.apk
 JuicyUnity/JuicyUnity-csharp.v12.suo
 JuicyUnity/obj/Debug/build.force
+JuicyUnity/Assembly-CSharp-Editor-vs.csproj
+JuicyUnity/Assembly-CSharp-Editor.csproj
+JuicyUnity/Assembly-CSharp-firstpass-vs.csproj
+JuicyUnity/Assembly-CSharp-vs.csproj
+JuicyUnity/Assembly-CSharp.csproj
