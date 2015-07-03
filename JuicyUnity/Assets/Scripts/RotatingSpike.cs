@@ -5,14 +5,12 @@ public class RotatingSpike : Spike {
 
     public float rotateSpeed = 90f;
     public float selfRotateSpeed = 90f;
-    public bool hideOnDotEnd;
     LineRenderer lRenderer;
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
         lRenderer = GetComponent<LineRenderer>();
-        dot.OnHided += OnDotHided;
-        dot.OnStartHide += OnDotStartHided;
     }
 
     public override void Update()
@@ -28,13 +26,8 @@ public class RotatingSpike : Spike {
         lRenderer.SetPosition(1, dot.transform.position);
     }
 
-    void OnDotHided()
+    public override void OnDotHided()
     {
         lRenderer.enabled = false;
-    }
-
-    void OnDotStartHided()
-    {
-        Hide();
     }
 }
