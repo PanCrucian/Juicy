@@ -26,6 +26,8 @@ public class MoveableLineSpike : Spike {
 
         if (Game.Instance.state != Game.GameStates.Game)
             return;
+        if (Player.Instance.healthState == Player.HealthStates.Death)
+            return;
 
         if (invert)
             offset += moveSpeed * Time.deltaTime;
