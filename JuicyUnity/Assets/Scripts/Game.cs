@@ -3,6 +3,9 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class Game : MonoBehaviour {
+    public delegate void SimpleDgt();
+    public SimpleDgt OnGamePlay;
+
     [System.Serializable]
     public class CustomData
     {
@@ -59,6 +62,8 @@ public class Game : MonoBehaviour {
                 state = GameStates.Game;
                 data.timer.gameObject.SetActive(false);
                 data.score.gameObject.SetActive(true);
+                if (OnGamePlay != null)
+                    OnGamePlay();
             }
         }
     }

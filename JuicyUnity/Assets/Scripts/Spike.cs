@@ -30,7 +30,7 @@ public class Spike : MonoBehaviour, IMeasured
     {
         if (dot != null)
             if (!dot.gameObject.activeSelf)
-                if (!hiding && !hideOnDotEnd)
+                if (!hiding && hideOnDotEnd)
                     Hide();
     }
 
@@ -71,7 +71,7 @@ public class Spike : MonoBehaviour, IMeasured
     /// </summary>
     public virtual void OnDotStartHide()
     {
-        if (hideOnDotEnd)
+        if (!hideOnDotEnd)
             Hide();
     }
 }
