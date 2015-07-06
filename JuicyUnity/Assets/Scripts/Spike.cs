@@ -39,12 +39,19 @@ public class Spike : MonoBehaviour, IMeasured
     /// </summary>
     public void Hide()
     {
-        if (!allowHide)
-            return;
-        hiding = true;
-        if (GetComponent<Collider>() != null)
-            GetComponent<Collider>().enabled = false;
-        StartCoroutine(HideNumerator());
+        try
+        {
+            if (!allowHide)
+                return;
+            hiding = true;
+            if (GetComponent<Collider>() != null)
+                GetComponent<Collider>().enabled = false;
+            StartCoroutine(HideNumerator());
+        }
+        catch
+        {
+            Debug.LogWarning("Объект уже уничтожен");
+        }
     }
 
     IEnumerator HideNumerator()

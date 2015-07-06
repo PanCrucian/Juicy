@@ -14,7 +14,8 @@ public class Player : MonoBehaviour {
         UpDown,
         InvLeftRight,
         InvUpDown,
-        DoubleTap
+        DoubleTap,
+        GUIButtons
     }
     [System.Serializable]
     public class CustomData
@@ -22,6 +23,8 @@ public class Player : MonoBehaviour {
         public GameObject graphics;
         public GameObject hook;
         public float doubleTapTime = 0.25f;
+        public GameObject hookBtn;
+        public GameObject directionBtn;
     }
     public CustomData data;
     public InputTypes inputType;
@@ -68,6 +71,22 @@ public class Player : MonoBehaviour {
         rotateToAngle = transform.eulerAngles.z * -1f;
         currentDot.StartHeat();
         magnetPosition = currentDot.transform.position;
+        if (inputType != InputTypes.GUIButtons)
+            OffGuiControlButtons();
+        else
+            OnGUiControlButtons();
+    }
+
+    void OffGuiControlButtons()
+    {
+        data.hookBtn.SetActive(false);
+        data.directionBtn.SetActive(false);
+    }
+
+    void OnGUiControlButtons()
+    {
+        data.hookBtn.SetActive(true);
+        data.directionBtn.SetActive(true);
     }
 
     void Update()
@@ -167,12 +186,22 @@ public class Player : MonoBehaviour {
         }  
     }
 
+    public void ChangeRotation()
+    {
+        if (rotatingSide == RotatingSides.Left)
+            ChangeRotation(true);
+        else
+            ChangeRotation(false);
+    }
+
     /// <summary>
     /// Ведем пальцем по экрану
     /// </summary>
     /// <param name="bed"></param>
     public void Drag(BaseEventData bed)
     {
+        if (inputType == InputTypes.GUIButtons)
+            return;
         PointerEventData data = (PointerEventData)bed;
         Vector2 press = data.pressPosition; 
         Vector2 current = data.position;
@@ -296,6 +325,8 @@ public class Player : MonoBehaviour {
     /// <param name="bed"></param>
     public void PointerDown(BaseEventData bed)
     {
+        if (inputType == InputTypes.GUIButtons)
+            return;
         ConnectToDotRequest();
         doubleTapCounter++;
         if (doubleTapCounter >= 2 && Mathf.Abs(Time.time - lastTapTime) <= data.doubleTapTime)
@@ -315,7 +346,7 @@ public class Player : MonoBehaviour {
     /// <summary>
     /// пуступил запрос на зацепку к точке
     /// </summary>
-    void ConnectToDotRequest()
+    public void ConnectToDotRequest()
     {
         if (triggeredDot != null)
             allowHook = true;

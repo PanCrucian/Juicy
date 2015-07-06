@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SpraySpike : Spike {
 
-    public SpraySpikeDot spray;
+    public SpikeInsideTrigger spray;
     /// <summary>
     /// Как часто будет спавниться точка
     /// </summary>
@@ -53,7 +53,7 @@ public class SpraySpike : Spike {
 
     IEnumerator SprayNumerator(bool upMove)
     {
-        SpraySpikeDot newSpray = (SpraySpikeDot)Instantiate(spray);
+        SpikeInsideTrigger newSpray = (SpikeInsideTrigger)Instantiate(spray);
         newSpray.transform.position = transform.position;
         newSpray.transform.parent = transform;
 

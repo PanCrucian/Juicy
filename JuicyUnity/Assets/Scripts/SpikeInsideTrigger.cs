@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpraySpikeDot : Spike {
+public class SpikeInsideTrigger : Spike {
 
     private bool allowKill = true;
 
